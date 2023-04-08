@@ -1,5 +1,6 @@
 package com.spring.demo.employee;
 
+import com.spring.demo.department.Department;
 import com.spring.demo.department.DepartmentDTO;
 import com.spring.demo.role.Role;
 import com.spring.demo.role.RoleConstant;
@@ -7,7 +8,10 @@ import com.spring.demo.role.RoleRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -59,6 +63,35 @@ public class EmployeeService {
                 })
                 .toList();
     }
+
+ public List<EmployeeDTO> getAllManagers(boolean withEmps) {
+        return employeeRepository.findAll()
+                .stream()
+                .filter(e-> e.getRole().getName().equals(RoleConstant.MANAGER))
+                .map(e->{
+                    EmployeeDTO employeeDTO = EmployeeDTO.toEmployeeDTO(e);
+
+                    List<DepartmentDTO> departments = withEmps? fetchDepartmentEmps(e.getManagedDepartments()) : DepartmentDTO.toDepartmentDTOList(e.getManagedDepartments());
+
+
+                    employeeDTO.setDepartments(DepartmentDTO.toDepartmentDTOSet(e.getDepartments()));
+                    employeeDTO.setManagedDepartments(departments);
+                    return employeeDTO;
+                })
+                .toList();
+    }
+
+    private List<DepartmentDTO> fetchDepartmentEmps(List<Department> departments) {
+        return departments
+                .stream()
+                .map(d->{
+                    DepartmentDTO dto = DepartmentDTO.toDepartmentDTO(d);
+                    dto.setEmployees(new HashSet<>(EmployeeDTO.toEmployeeDTO(d.getEmployees().stream().toList())));
+                    return dto;
+                })
+                .toList();
+    }
+
 
     public Employee getEmployee(Long employeeId) {
         return employeeRepository

@@ -23,8 +23,11 @@ public class EmployeeController {
 
 
     @GetMapping
-    public ResponseEntity<List<EmployeeDTO>> getEmployee() {
-        return ResponseEntity.ok(employeeService.getAllEmployees());
+    public ResponseEntity<List<EmployeeDTO>> getEmployee(@RequestParam(required = false,defaultValue = "false") boolean managersOnly,
+                                                         @RequestParam(required = false, defaultValue = "false") boolean withEmps) {
+
+        List<EmployeeDTO> allEmployees = managersOnly? employeeService.getAllManagers(withEmps) : employeeService.getAllEmployees();
+        return ResponseEntity.ok(allEmployees);
 
     }
 
@@ -45,6 +48,8 @@ public class EmployeeController {
         this.employeeService.saveEmployees(employees);
         return ResponseEntity.ok().build();
     }
+
+
 
 
 }

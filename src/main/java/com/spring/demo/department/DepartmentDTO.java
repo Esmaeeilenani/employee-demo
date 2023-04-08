@@ -59,7 +59,6 @@ public class DepartmentDTO implements Serializable {
         DepartmentDTO dto = new DepartmentDTO();
                 dto.setId(department.getId());
                 dto.setName(department.getName());
-
         return dto;
 
 
