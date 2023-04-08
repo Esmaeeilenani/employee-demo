@@ -23,7 +23,7 @@ public class EmployeeController {
 
 
     @GetMapping
-    public ResponseEntity<List<Employee>> getEmployee() {
+    public ResponseEntity<List<EmployeeDTO>> getEmployee() {
         return ResponseEntity.ok(employeeService.getAllEmployees());
 
     }

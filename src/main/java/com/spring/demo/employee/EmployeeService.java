@@ -1,10 +1,11 @@
 package com.spring.demo.employee;
 
+import com.spring.demo.department.DepartmentDTO;
 import com.spring.demo.role.Role;
 import com.spring.demo.role.RoleConstant;
 import com.spring.demo.role.RoleRepository;
-import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -46,8 +47,17 @@ public class EmployeeService {
         this.employeeRepository.saveAll(employees);
     }
 
-    public List<Employee> getAllEmployees() {
-        return employeeRepository.findAll();
+
+    public List<EmployeeDTO> getAllEmployees() {
+        return employeeRepository.findAll()
+                .stream()
+                .map(e->{
+                    EmployeeDTO employeeDTO = EmployeeDTO.toEmployeeDTO(e);
+                    employeeDTO.setDepartments(DepartmentDTO.toDepartmentDTOSet(e.getDepartments()));
+                    employeeDTO.setManagedDepartments(DepartmentDTO.toDepartmentDTOList(e.getManagedDepartments()));
+                    return employeeDTO;
+                })
+                .toList();
     }
 
 }
