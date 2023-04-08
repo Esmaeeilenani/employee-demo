@@ -57,6 +57,13 @@ public class DemoApplication {
             employeeRepository.save(employee3);
 
 
+            Employee employee4 = new Employee();
+            employee4.setName("anas");
+            employee4.setNin("1234567893");
+            employee4.setRole(manager);
+            employeeRepository.save(employee4);
+
+
 
 
             Department department = new Department();

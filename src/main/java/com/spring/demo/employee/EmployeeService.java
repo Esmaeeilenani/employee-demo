@@ -60,4 +60,32 @@ public class EmployeeService {
                 .toList();
     }
 
+    public Employee getEmployee(Long employeeId) {
+        return employeeRepository
+                .findById(employeeId)
+                .orElseThrow(() -> new IllegalArgumentException("user with id " + employeeId + " is not found"));
+
+    }
+
+
+    public Employee validateUserIsCEO(Long userId){
+
+        Employee employee = getEmployee(userId);
+
+        if (!employee.getRole().getName().equals(RoleConstant.CEO)) {
+            throw new IllegalArgumentException("user is not CEO");
+        }
+
+        return employee;
+    }
+
+    public Employee validateUserIsManager(Long userId) {
+        Employee employee = getEmployee(userId);
+
+        if (!employee.getRole().getName().equals(RoleConstant.MANAGER)) {
+            throw new IllegalArgumentException("user is not Manager");
+        }
+
+        return employee;
+    }
 }
